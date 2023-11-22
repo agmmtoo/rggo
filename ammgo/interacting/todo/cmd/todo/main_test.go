@@ -28,6 +28,10 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
+	if os.Getenv("TODO_FILENAME") != "" {
+		fileName = os.Getenv("TODO_FILENAME")
+	}
+
 	fmt.Println("Running tests....")
 	result := m.Run()
 
