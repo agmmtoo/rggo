@@ -8,9 +8,11 @@ import (
 )
 
 const (
-	inputFile  = "./testdata/test1.md"
-	resultFile = "test1.md.html"
-	goldenFile = "./testdata/test1.md.html"
+	inputFile              = "./testdata/test1.md"
+	resultFile             = "test1.md.html"
+	goldenFile             = "./testdata/test1.md.html"
+	templateFile           = "./testdata/template-fmt.html.tmpl"
+	goldenFileWithTemplate = "./testdata/template-fmt.html"
 )
 
 func TestParseContent(t *testing.T) {
@@ -39,7 +41,7 @@ func TestParseContent(t *testing.T) {
 func TestRun(t *testing.T) {
 	var mockStdOut bytes.Buffer
 
-	if err := run(inputFile, "", &mockStdOut, true); err != nil {
+	if err := run(inputFile, templateFile, &mockStdOut, true); err != nil {
 		t.Fatal(err)
 	}
 
@@ -50,7 +52,7 @@ func TestRun(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	expected, err := os.ReadFile(goldenFile)
+	expected, err := os.ReadFile(goldenFileWithTemplate)
 	if err != nil {
 		t.Fatal(err)
 	}
