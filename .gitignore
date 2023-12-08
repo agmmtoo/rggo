@@ -1,0 +1,26 @@
+# Ignore build artifacts
+bin/
+pkg/
+
+# Ignore generated files
+*.pb.go
+
+# Ignore temporary files
+*.tmp
+
+# Ignore test files
+*_test.go
+
+# Ignore IDE-specific files
+*.sublime-project
+*.sublime-workspace
+*.vscode/
+
+# Ignore local environment files
+.env
+
+# Ignore log files
+*.log
+
+# Official code files
+code/
