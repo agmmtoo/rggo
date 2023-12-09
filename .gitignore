@@ -8,9 +8,6 @@ pkg/
 # Ignore temporary files
 *.tmp
 
-# Ignore test files
-*_test.go
-
 # Ignore IDE-specific files
 *.sublime-project
 *.sublime-workspace
