@@ -1,8 +1,10 @@
 package scan
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
+	"os"
 	"sort"
 )
 
@@ -39,4 +41,30 @@ func (hl *HostsList) Remove(host string) error {
 		return nil
 	}
 	return fmt.Errorf("%w: %s", ErrNotExists, host)
+}
+
+func (hl *HostsList) Load(hostsFile string) error {
+	f, err := os.Open(hostsFile)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return nil
+		}
+		return err
+	}
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		hl.Hosts = append(hl.Hosts, scanner.Text())
+	}
+	return nil
+}
+
+func (hl *HostsList) Save(hostFile string) error {
+	output := ""
+	for _, h := range hl.Hosts {
+		output += fmt.Sprintln(h)
+	}
+
+	return os.WriteFile(hostFile, []byte(output), 0644)
 }
