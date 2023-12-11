@@ -2,6 +2,7 @@ package scan_test
 
 import (
 	"errors"
+	"os"
 	"testing"
 
 	"agmmtoo.me/ammgo/cobra/pScan/scan"
@@ -87,5 +88,29 @@ func TestRemove(t *testing.T) {
 				t.Errorf("Host name %q should not be in the list\n", tc.host)
 			}
 		})
+	}
+}
+
+func TestSaveLoad(t *testing.T) {
+	hl1 := scan.HostsList{}
+	hl2 := scan.HostsList{}
+
+	hostName := "host1"
+	hl1.Add(hostName)
+
+	tf, err := os.CreateTemp("", "")
+	if err != nil {
+		t.Fatalf("Error creating temp file: %s\n", err)
+	}
+	defer os.Remove(tf.Name())
+
+	if err := hl1.Save(tf.Name()); err != nil {
+		t.Fatalf("Error saving hosts list: %s\n", err)
+	}
+	if err := hl2.Load(tf.Name()); err != nil {
+		t.Fatalf("Error loading hosts list: %s\n", err)
+	}
+	if hl1.Hosts[0] != hl2.Hosts[0] {
+		t.Errorf("Hosts %q should match %q host", hl1.Hosts[0], hl2.Hosts[0])
 	}
 }
