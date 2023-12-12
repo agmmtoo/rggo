@@ -2,41 +2,49 @@
 Copyright © 2023 agmmtoo
 Copyrights apply to this source code.
 Check LICENSE for details.
-
 */
 package cmd
 
 import (
 	"fmt"
+	"io"
+	"os"
 
+	"agmmtoo.me/ammgo/cobra/pScan/scan"
 	"github.com/spf13/cobra"
 )
 
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("delete called")
+	Use:     "delete <host1>...<hostN>",
+	Aliases: []string{"d"},
+	Short:   "Delete hosts(s) from list",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		hostsFile, err := cmd.Flags().GetString("hosts-file")
+		if err != nil {
+			return err
+		}
+		return deleteAction(os.Stdout, hostsFile, args)
 	},
 }
 
 func init() {
 	hostsCmd.AddCommand(deleteCmd)
+}
 
-	// Here you will define your flags and configuration settings.
+func deleteAction(out io.Writer, hostsFile string, args []string) error {
+	hl := &scan.HostsList{}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// deleteCmd.PersistentFlags().String("foo", "", "A help for foo")
+	if err := hl.Load(hostsFile); err != nil {
+		return err
+	}
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// deleteCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	for _, h := range args {
+		if err := hl.Remove(h); err != nil {
+			return err
+		}
+		fmt.Fprintln(out, "delete host", h)
+	}
+
+	return hl.Save(hostsFile)
 }
