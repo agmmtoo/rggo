@@ -43,7 +43,7 @@ func deleteAction(out io.Writer, hostsFile string, args []string) error {
 		if err := hl.Remove(h); err != nil {
 			return err
 		}
-		fmt.Fprintln(out, "delete host", h)
+		fmt.Fprintf(out, "Deleted host: %s\n", h)
 	}
 
 	return hl.Save(hostsFile)
