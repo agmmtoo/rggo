@@ -49,7 +49,7 @@ func scanAction(out io.Writer, hostsFile string, ports []int) error {
 func printResults(out io.Writer, results []scan.Results) error {
 	message := ""
 	for _, r := range results {
-		message := fmt.Sprintf("%s:", r.Host)
+		message += fmt.Sprintf("%s:", r.Host)
 		if r.NotFound {
 			message += fmt.Sprintf(" Host not found\n\n")
 			continue

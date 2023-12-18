@@ -123,15 +123,15 @@ func TestIntegration(t *testing.T) {
 		t.Fatalf("Expected no error, got: %q\n", err)
 	}
 
-	if err := scanAction(&out, tf, nil); err != nil {
-		t.Fatalf("Expected no error, got: %q\n", err)
-	}
-
 	if err := deleteAction(&out, tf, []string{delHost}); err != nil {
 		t.Fatalf("Expected no error, got: %q\n", err)
 	}
 
 	if err := listAction(&out, tf, nil); err != nil {
+		t.Fatalf("Expected no error, got: %q\n", err)
+	}
+
+	if err := scanAction(&out, tf, nil); err != nil {
 		t.Fatalf("Expected no error, got: %q\n", err)
 	}
 
