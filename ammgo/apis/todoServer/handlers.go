@@ -45,6 +45,7 @@ func todoRouter(todoFile string, l sync.Locker) http.HandlerFunc {
 				message := "Method not supported"
 				replyError(w, r, http.StatusMethodNotAllowed, message)
 			}
+			return
 		}
 
 		id, err := validateId(r.URL.Path, list)
