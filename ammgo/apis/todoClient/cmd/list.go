@@ -12,7 +12,6 @@ import (
 	"text/tabwriter"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // listCmd represents the list command
@@ -20,7 +19,10 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List todo items",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		apiRoot := viper.GetString("api-root")
+		apiRoot, err := cmd.Flags().GetString("api-root")
+		if err != nil {
+			return err
+		}
 		return listAction(os.Stdout, apiRoot)
 	},
 }
