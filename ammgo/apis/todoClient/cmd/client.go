@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -82,3 +83,44 @@ func getOne(apiRoot string, id int) (item, error) {
 }
 
 const timeFormat = "Jan/02 @15:04"
+
+func sendRequest(url, method, contentType string, expStatus int, body io.Reader) error {
+	req, err := http.NewRequest(method, url, body)
+	if err != nil {
+		return err
+	}
+	if contentType != "" {
+		req.Header.Set("Content-Type", contentType)
+	}
+	r, err := newClient().Do(req)
+	if err != nil {
+		return err
+	}
+	defer r.Body.Close()
+	if r.StatusCode != expStatus {
+		msg, err := io.ReadAll(r.Body)
+		if err != nil {
+			return fmt.Errorf("Cannot read body: %w", err)
+		}
+		err = ErrInvalidResponse
+		if r.StatusCode == http.StatusNotFound {
+			err = ErrNotFound
+		}
+		return fmt.Errorf("%w: %s", err, msg)
+	}
+	return nil
+}
+
+func addItem(apiRoot, task string) error {
+	u := fmt.Sprintf("%s/todo", apiRoot)
+	item := struct {
+		Task string `json:"task"`
+	}{
+		Task: task,
+	}
+	var body bytes.Buffer
+	if err := json.NewEncoder(&body).Encode(item); err != nil {
+		return err
+	}
+	return sendRequest(u, http.MethodPost, "application/json", http.StatusCreated, &body)
+}
