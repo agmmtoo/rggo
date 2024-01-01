@@ -42,6 +42,6 @@ func completeAction(out io.Writer, apiRoot, arg string) error {
 }
 
 func printComplete(out io.Writer, id int) error {
-	_, err := fmt.Fprintf(out, "Item number %d marked as complete.\n", id)
+	_, err := fmt.Fprintf(out, "Item number %d marked as completed.\n", id)
 	return err
 }

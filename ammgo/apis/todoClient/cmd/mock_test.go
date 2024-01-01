@@ -54,6 +54,10 @@ var testResp = map[string]struct {
 		Status: http.StatusCreated,
 		Body:   "",
 	},
+	"noContent": {
+		Status: http.StatusNoContent,
+		Body:   "",
+	},
 }
 
 func mockServer(h http.HandlerFunc) (string, func()) {
