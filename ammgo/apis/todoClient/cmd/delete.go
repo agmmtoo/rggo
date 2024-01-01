@@ -42,6 +42,6 @@ func delAction(out io.Writer, apiRoot, arg string) error {
 }
 
 func printDel(out io.Writer, id int) error {
-	_, err := fmt.Fprintf(out, "Item number %d deleted. \n", id)
+	_, err := fmt.Fprintf(out, "Item number %d deleted.\n", id)
 	return err
 }
